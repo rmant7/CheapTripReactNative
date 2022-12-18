@@ -87,7 +87,7 @@ export const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40,
+    marginTop: 60,
   },
   titleContainer: {
     width: "100%",
