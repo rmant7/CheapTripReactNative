@@ -2,11 +2,10 @@ import React from "react";
 import {
   MD3LightTheme as DefaultTheme,
   Provider as PaperProvider,
-  ThemeProvider,
 } from "react-native-paper";
 
 import { Main } from "./src/components/Main";
-import { generateColors } from "./src/screens/scheme/colors";
+import { generateColors } from "./src/scheme/colors";
 
 const theme = {
   ...DefaultTheme,
@@ -20,12 +19,3 @@ export default function App() {
     </PaperProvider>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
