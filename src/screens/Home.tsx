@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, StatusBar } from "react-native";
 import { Text, useTheme, Divider, TextInput, Button } from "react-native-paper";
 
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -80,6 +80,7 @@ export const Home = () => {
           source={require("../../assets/image/Logo_ChT_2.png")}
         />
       </View>
+      <StatusBar barStyle={"dark-content"} />
     </View>
   );
 };

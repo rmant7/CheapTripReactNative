@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { Appbar, Menu } from "react-native-paper";
 
-export function CustomNavigationBar({ navigation, back }) {
+interface BarProps {
+  navigation: any;
+  back?: any;
+}
+
+export function CustomNavigationBar({ navigation, back }: BarProps) {
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);

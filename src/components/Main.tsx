@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -9,7 +9,7 @@ import { CustomNavigationBar } from "./AppBar";
 import { Home } from "../screens/Home";
 import { Contacts } from "../screens/Contacts";
 
-export const Main = () => {
+export const Main: FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
