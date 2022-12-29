@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, StatusBar } from "react-native";
-import { Text, useTheme, Divider, TextInput, Button } from "react-native-paper";
+import { View, StyleSheet, Image } from "react-native";
+import { Text, useTheme, TextInput, Button } from "react-native-paper";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -10,36 +10,22 @@ export const Home = () => {
   const theme = useTheme();
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          ...styles.titleContainer,
-          backgroundColor: theme.colors.primary,
-        }}
-      >
+      <View style={styles.titleContainer}>
         <Text
           style={{
             ...styles.title,
-            color: theme.colors.onPrimary,
+            color: theme.colors.secondary,
           }}
-          variant="displayLarge"
+          variant="titleMedium"
         >
-          CheapTrip
-        </Text>
-        <Text
-          style={{
-            ...styles.title,
-            color: theme.colors.onPrimary,
-          }}
-          variant="displaySmall"
-        >
-          Плати меньше,посети больше!
+          Find most beneficial and unusual routes between cities with airports,
+          combining flight, train, bus, ferry and rideshare.
         </Text>
       </View>
-      <Divider />
       <View style={styles.mainContainer}>
         <TextInput
           style={styles.input}
-          label="Откуда"
+          label="From"
           value={forCity}
           onChangeText={(text) => setForCity(text)}
           mode={"outlined"}
@@ -52,7 +38,7 @@ export const Home = () => {
         />
         <TextInput
           style={styles.input}
-          label="Куда"
+          label="To"
           value={toCity}
           onChangeText={(text) => setToCity(text)}
           mode={"outlined"}
@@ -64,14 +50,14 @@ export const Home = () => {
           mode="elevated"
           onPress={() => console.log("Pressed")}
         >
-          Очистить
+          Clear
         </Button>
         <Button
-          icon="camera"
+          icon="car"
           mode="contained"
           onPress={() => console.log("Pressed")}
         >
-          Поехали
+          Let`s go
         </Button>
       </View>
       <View style={styles.imageContainer}>
@@ -80,7 +66,6 @@ export const Home = () => {
           source={require("../../assets/image/Logo_ChT_2.png")}
         />
       </View>
-      <StatusBar barStyle={"dark-content"} />
     </View>
   );
 };
@@ -88,22 +73,26 @@ export const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 60,
+    padding: 16,
   },
   titleContainer: {
-    width: "100%",
-    alignItems: "center",
+    marginBottom: 10,
   },
-  title: {},
+  title: {
+    padding: 0,
+    margin: 0,
+    textAlign: "center",
+  },
   mainContainer: {
-    margin: 16,
+    marginBottom: 16,
     alignItems: "center",
   },
   input: {
     width: "100%",
   },
   iconArrow: {
-    marginTop: 5,
+    marginTop: 10,
+    marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: "row",
