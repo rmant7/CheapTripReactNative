@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FC } from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, Platform } from "react-native";
 import { Text, useTheme, TextInput, Button } from "react-native-paper";
 
 import Autocomplete from "react-native-autocomplete-input";
@@ -64,90 +64,79 @@ export const Home: FC = () => {
         </Text>
       </View>
       <View style={styles.mainContainer}>
-        {/* <TextInput
-          style={styles.input}
-          label="From"
-          value={forCity}
-          onChangeText={(text) => setForCity(text)}
-          mode={"outlined"}
-        /> */}
+        <View style={styles.autocompleteContainer}>
+          <Autocomplete
+            containerStyle={{
+              width: "100%",
+              backgroundColor: "tomato",
+            }}
+            listContainerStyle={{}}
+            listStyle={{}}
+            hideResults={hideForCity}
+            data={dataForCity}
+            value={forCity}
+            onChangeText={(text: string) => {
+              setForCity(text), setHideForCity(false);
+            }}
+            flatListProps={{
+              keyExtractor: (_: any, idx: any) => idx,
+              renderItem: ({ item }: { item: Item }) => (
+                <Text
+                  onPress={() => {
+                    setForCity(item.name);
+                    setHideForCity(true);
+                  }}
+                  style={styles.autocompleteText}
+                >
+                  {item.name}
+                </Text>
+              ),
+            }}
+          />
 
-        <Autocomplete
-          containerStyle={{
-            width: "100%",
-            backgroundColor: "tomato",
-          }}
-          listContainerStyle={{}}
-          listStyle={{}}
-          hideResults={hideForCity}
-          data={dataForCity}
-          value={forCity}
-          onChangeText={(text: string) => {
-            setForCity(text), setHideForCity(false);
-          }}
-          flatListProps={{
-            keyExtractor: (_: any, idx: any) => idx,
-            renderItem: ({ item }: { item: Item }) => (
-              <Text
-                onPress={() => {
-                  setForCity(item.name);
-                  setHideForCity(true);
-                }}
-                style={styles.autocompleteText}
-              >
-                {item.name}
-              </Text>
-            ),
-          }}
-        />
-
-        <FontAwesome5
-          style={styles.iconArrow}
-          name="angle-double-down"
-          size={24}
-          color={`${theme.colors.primary}`}
-        />
-        <Autocomplete
-          containerStyle={{
-            width: "100%",
-            backgroundColor: "tomato",
-          }}
-          listContainerStyle={{}}
-          listStyle={{}}
-          hideResults={hideToCity}
-          data={dataToCity}
-          value={toCity}
-          onChangeText={(text: string) => {
-            setToCity(text), setHideToCity(false);
-          }}
-          flatListProps={{
-            keyExtractor: (_: any, idx: any) => idx,
-            renderItem: ({ item }: { item: Item }) => (
-              <Text
-                onPress={() => {
-                  setToCity(item.name);
-                  setHideToCity(true);
-                }}
-                style={styles.autocompleteText}
-              >
-                {item.name}
-              </Text>
-            ),
-          }}
-        />
-        {/* <TextInput
-          style={styles.input}
-          label="To"
-          value={toCity}
-          onChangeText={(text) => setToCity(text)}
-          mode={"outlined"}
-        /> */}
+          <FontAwesome5
+            style={styles.iconArrow}
+            name="angle-double-down"
+            size={24}
+            color={`${theme.colors.primary}`}
+          />
+          <Autocomplete
+            containerStyle={{
+              width: "100%",
+              backgroundColor: "tomato",
+            }}
+            listContainerStyle={{}}
+            listStyle={{}}
+            hideResults={hideToCity}
+            data={dataToCity}
+            value={toCity}
+            onChangeText={(text: string) => {
+              setToCity(text), setHideToCity(false);
+            }}
+            flatListProps={{
+              keyExtractor: (_: any, idx: any) => idx,
+              renderItem: ({ item }: { item: Item }) => (
+                <Text
+                  onPress={() => {
+                    setToCity(item.name);
+                    setHideToCity(true);
+                  }}
+                  style={styles.autocompleteText}
+                >
+                  {item.name}
+                </Text>
+              ),
+            }}
+          />
+        </View>
       </View>
       <View style={styles.buttonContainer}>
         <Button
           icon="delete"
           mode="elevated"
-          onPress={() => console.log("Pressed")}
+          onPress={() => {
+            setForCity(""), setToCity("");
+          }}
         >
           Clear
         </Button>
@@ -196,6 +185,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
+    ...Platform.select({
+      android: {
+        marginTop: 130,
+      },
+    }),
   },
   imageContainer: {
     flex: 1,
@@ -207,12 +201,18 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   autocompleteContainer: {
-    // flex: 1,
-    // left: 0,
-    // position: "absolute",
-    // right: 0,
-    // top: 0,
-    // zIndex: 1,
+    width: "100%",
+    alignItems: "center",
+    ...Platform.select({
+      android: {
+        flex: 1,
+        left: 0,
+        position: "absolute",
+        right: 0,
+        top: 0,
+        zIndex: 1,
+      },
+    }),
   },
   autocompleteText: {
     fontSize: 26,
