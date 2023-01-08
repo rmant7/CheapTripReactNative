@@ -20,10 +20,10 @@ export const Home: FC = () => {
 
   const filtredCities = (forCity: string) => {
     if (forCity) {
-      const cityFor = cities.filter((item: { name: string }) => {
+      const cityFor = cities.slice(1).filter((item: { name: string }) => {
         const name = item.name;
         if (name === undefined) return;
-        return name.toLowerCase().indexOf(forCity.toLowerCase()) > -1;
+        return name.toLowerCase().indexOf(forCity.toLowerCase()) === 0;
       });
       return cityFor;
     }
@@ -47,6 +47,7 @@ export const Home: FC = () => {
       }
     })();
   }, []);
+
   // const renderItems = ({ item }: { item: Item }) => <Text>{item.name}</Text>;
   return (
     <View style={styles.container}>
