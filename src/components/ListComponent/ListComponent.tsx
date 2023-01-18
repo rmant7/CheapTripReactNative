@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Text, View, FlatList, Alert } from "react-native";
 import styles from "./styles";
-import { Fontisto, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, Fontisto, MaterialIcons } from "@expo/vector-icons";
 import ListBottomComponent from "../ListBottomComponent/ListBottomComponent";
 
 type ListComponentProps = {
@@ -31,9 +31,10 @@ const ListComponent: React.FC<ListComponentProps> = ({
         ]}
       >
         <View style={styles.inline}>
-          <Fontisto style={styles.logo} name="plane" size={24} color="black" />
-          <Fontisto style={styles.logo} name="train" size={24} color="black" />
-          <Fontisto style={styles.logo} name="car" size={24} color="black" />
+          <Fontisto style={styles.logo} name="plane" size={24} color="grey" />
+          <FontAwesome5 style={styles.logo} name="bus" size={24} color="grey" />
+          <FontAwesome5 style={styles.logo} name="train" size={24} color="grey" />
+          <Fontisto style={styles.logo} name="car" size={24} color="grey" />
         </View>
         <View style={styles.inline}>
           <Text style={styles.location}>Kiev</Text>
