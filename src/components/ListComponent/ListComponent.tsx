@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Text, View, FlatList, Alert } from "react-native";
+import { Text, View, FlatList, Alert , Image} from "react-native";
 import styles from "./styles";
 import { FontAwesome5, Fontisto, MaterialIcons } from "@expo/vector-icons";
 import ListBottomComponent from "../ListBottomComponent/ListBottomComponent";
@@ -31,10 +31,13 @@ const ListComponent: React.FC<ListComponentProps> = ({
         ]}
       >
         <View style={styles.inline}>
-          <Fontisto style={styles.logo} name="plane" size={24} color="grey" />
-          <FontAwesome5 style={styles.logo} name="bus" size={24} color="grey" />
-          <FontAwesome5 style={styles.logo} name="train" size={24} color="grey" />
-          <Fontisto style={styles.logo} name="car" size={24} color="grey" />
+          <Fontisto style={styles.logo} name="plane" size={24} color="rgb(101,124,137)" />
+          <FontAwesome5 style={styles.logo} name="bus" size={24} color="rgb(101,124,137)" />
+          <FontAwesome5 style={styles.logo} name="train" size={24} color="rgb(101,124,137)" />
+          {/* <Fontisto style={styles.logo} name="car" size={24} color="grey" /> */}
+          <Image  
+          style = {styles.car}
+          source = {require ('../../../assets/image/asd.png')}/>
         </View>
         <View style={styles.inline}>
           <Text style={styles.location}>Kiev</Text>
@@ -77,4 +80,4 @@ const ListComponent: React.FC<ListComponentProps> = ({
   );
 };
 
-export default React.memo(ListComponent);
+export default ListComponent;

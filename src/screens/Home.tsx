@@ -27,6 +27,15 @@ export const Home: FC = () => {
   const [hideToCity, setHideToCity] = useState(false);
   const theme = useTheme();
 
+ const [onSubmit,setOnSubmit] = useState(false)
+
+ const onSubmitAction = () => {
+  console.log("Pressed")
+  setOnSubmit(true)
+ }
+
+ 
+
   const filtredCities = (forCity: string) => {
     if (forCity) {
       const cityFor = cities.slice(1).filter((item: { name: string }) => {
@@ -166,7 +175,9 @@ export const Home: FC = () => {
             icon="delete"
             mode="elevated"
             onPress={() => {
-              setForCity(""), setToCity("");
+              setForCity(""), setToCity("")
+              setOnSubmit(false)
+              ;
             }}
           >
             Clear
@@ -174,20 +185,20 @@ export const Home: FC = () => {
           <Button
             icon="car"
             mode="contained"
-            onPress={() => console.log("Pressed")}
+            onPress={onSubmitAction}
           >
             Let`s go
           </Button>
         </View>
       </View>
+      {onSubmit ? 
       <View style={styles.flatList}>
         <FlatList
           data={directions}
           renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 100 }}
           keyExtractor={(item) => item.id}
         />
-      </View>
+      </View> : null}
     </View>
   );
 };

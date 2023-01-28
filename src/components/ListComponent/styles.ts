@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   box: {
+    flex: 1,
     justifyContent: 'space-between',
     marginTop: 10,
     borderRadius:5,
@@ -39,6 +40,7 @@ const styles = StyleSheet.create({
   price: {
     color: "#fff",
     fontWeight: "bold",
+    
   },
   priceContainer: {
     backgroundColor: "#ff6721",
@@ -78,12 +80,21 @@ const styles = StyleSheet.create({
   },
   shadow : {
     elevation : 5,
-    width: '95%',
+    width: '100%',
     alignSelf: 'center',
     shadowColor: colors.shadow,
     shadowOffset: { width: 3, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
+  },
+
+  car: {
+    zIndex: 100,
+    width: 24,
+    height:24,
+    alignSelf: "center",
+    backgroundColor: "white",
+    marginLeft : 5,
   }
 });
 

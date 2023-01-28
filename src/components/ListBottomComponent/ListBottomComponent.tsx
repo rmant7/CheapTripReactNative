@@ -44,7 +44,7 @@ const ListBottomComponent: React.FC<Props> = ({ bottom }) => {
   );
 };
 
-export default React.memo(ListBottomComponent);
+export default ListBottomComponent;
 
 const styles = StyleSheet.create({
   itemContainer: {
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    padding : 10,
+    padding : 5,
   },
   boldText: {
     fontWeight: "bold",
