@@ -1,26 +1,25 @@
 import React, { useState, useMemo } from "react";
-import { Text, View, FlatList, Alert , Image} from "react-native";
+import { Text, View, FlatList, Alert, Image, ListRenderItemInfo } from "react-native";
 import styles from "./styles";
 import { FontAwesome5, Fontisto, MaterialIcons } from "@expo/vector-icons";
 import ListBottomComponent from "../ListBottomComponent/ListBottomComponent";
+import { Route } from "../../screens/Home";
 
 type ListComponentProps = {
-  forCity: string;
-  toCity: string;
+  forCity: string | undefined;
+  toCity: string | undefined;
   item: any;
 };
 
-const ListComponent: React.FC<ListComponentProps> = ({
-  item,
-  forCity,
-  toCity,
-}) => {
-  const [locationsVisible, setLocationsVisible] = useState(false);
+const ListComponent: React.FC<Route> = (route) => {
 
-  const items = [1, 2, 3, 4, 5];
+  const [locationsVisible, setLocationsVisible] = useState(false);
+  console.log("item", route);
+
+
 
   return (
-    <View style = {styles.shadow}>
+    <View style={styles.shadow}>
       <View
         style={[
           styles.box,
@@ -35,23 +34,20 @@ const ListComponent: React.FC<ListComponentProps> = ({
           <FontAwesome5 style={styles.logo} name="bus" size={24} color="rgb(101,124,137)" />
           <FontAwesome5 style={styles.logo} name="train" size={24} color="rgb(101,124,137)" />
           {/* <Fontisto style={styles.logo} name="car" size={24} color="grey" /> */}
-          <Image  
-          style = {styles.car}
-          source = {require ('../../../assets/image/asd.png')}/>
+          <Image
+            style={styles.car}
+            source={require('../../../assets/image/asd.png')} />
         </View>
         <View style={styles.inline}>
-          <Text style={styles.location}>Kiev</Text>
+
+          <Text style={styles.location}>{route.from}</Text>
           <Fontisto name="arrow-right" size={12} color="black" />
-          <Text style={styles.location}>Wroclaw</Text>
-          <Fontisto name="arrow-right" size={12} color="black" />
-          <Text style={styles.location}>Poznan</Text>
-          <Fontisto name="arrow-right" size={12} color="black" />
-          <Text style={styles.location}>Frankfurt</Text>
+          <Text style={styles.location}>{route.to}</Text>
         </View>
         <View style={styles.bottomContainer}>
           <Text style={styles.time}>8 h 36 m</Text>
           <View style={styles.priceContainer}>
-            <Text style={styles.price}>€{" " + item.price}</Text>
+            <Text style={styles.price}>€{" " + route.euro_price}</Text>
           </View>
         </View>
         <View style={styles.detailsButton}>
@@ -68,15 +64,15 @@ const ListComponent: React.FC<ListComponentProps> = ({
         </View>
       </View>
       {locationsVisible &&
-        items.map((item, index) => {
+        route.travel_data.map((item, index) => {
           return (
             <ListBottomComponent
               key={index.toString()}
-              bottom={index === items.length - 1}
+              bottom={index === route.travel_data.length - 1}
             />
           );
         })}
-</View>
+    </View>
   );
 };
 
