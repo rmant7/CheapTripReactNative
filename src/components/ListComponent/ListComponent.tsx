@@ -6,12 +6,12 @@ import ListBottomComponent from "../ListBottomComponent/ListBottomComponent";
 import { Route } from "../../screens/Home";
 
 type ListComponentProps = {
-  forCity: string | undefined;
-  toCity: string | undefined;
-  item: any;
+  fromLocation: any;
+  toLocation: any;
+  route: any;
 };
 
-const ListComponent: React.FC<Route> = (route) => {
+const ListComponent: React.FC<ListComponentProps> = ({ fromLocation, toLocation, route }) => {
 
   const [locationsVisible, setLocationsVisible] = useState(false);
   console.log("item", route);
@@ -64,7 +64,7 @@ const ListComponent: React.FC<Route> = (route) => {
         </View>
       </View>
       {locationsVisible &&
-        route.travel_data.map((item, index) => {
+        route.travel_data.map((item: any, index: any) => {
           return (
             <ListBottomComponent
               key={index.toString()}

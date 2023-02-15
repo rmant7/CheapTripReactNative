@@ -35,15 +35,20 @@ export const Home: FC = () => {
   const [fromLocation, setFromLocation] = useState<Location>({} as Location);
   const [toLocation, setToLocation] = useState<Location>({} as Location);
 
-  const [inputData, setInputData] = useState<string>("");
+  const [inputFromData, setInputFromData] = useState<string>("");
+  const [inputToData, setInputToData] = useState<string>("");
 
   const [locations, setLocations] = useState<Location[]>((useContext(Context) as any).locations);
-  const [routes, setRoutes] = useState<Route[]>([]);
+  const [routes, setRoutes] = useState<Route[]>([]); // all routes from the file
+  const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
 
   const [hideFromAutocomplete, setHideFromAutocomplete] = useState(false);
   const [hideToAutocomplete, setHideToAutocomplete] = useState(false);
 
   const [onSubmit, setOnSubmit] = useState(false)
+
+  const [dataFromLocation, setDataFromLocation] = useState<Location[]>([]);
+  const [dataToLocation, setDataToLocation] = useState<Location[]>([])
 
   const theme = useTheme();
 
@@ -52,6 +57,7 @@ export const Home: FC = () => {
     setOnSubmit(true)
   }
 
+  // get similar locations for autocomplete 
   const getSimilarLocations = (locationName: string) => {
     if (locationName) {
       const similarLocatoins = locations.filter((location: Location) => {
@@ -63,15 +69,28 @@ export const Home: FC = () => {
     return [];
   };
 
-  const [dataFromLocation, setDataFromLocation] = useState<Location[]>([]);
-  const [dataToLocation, setDataToLocation] = useState<Location[]>([])
+  const contextData: any = useContext(Context);
+  
+  const getRoutes = (from: Location, to: Location) => {
+    const filteredRoutes = routes.filter((route: Route) => route.from === from.id && route.to === to.id)
+    return filteredRoutes;
+  }
 
+  useEffect(()=>{
+    setRoutes(contextData.routes);
+
+  },[])
+
+  // get similar locations for autocomplete on input change
   useEffect(() => {
-    setDataFromLocation(getSimilarLocations(inputData));
-    setDataToLocation(getSimilarLocations(inputData))
-    console.log(inputData)
-    console.log(dataToLocation)
-  }, [inputData])
+    setDataFromLocation(getSimilarLocations(inputFromData));
+    setDataToLocation(getSimilarLocations(inputToData))
+  }, [inputFromData, inputToData]);
+
+  // find routes for trip
+  useEffect(() => {
+    setFilteredRoutes(getRoutes(fromLocation, toLocation))
+  }, [fromLocation, toLocation]);
 
 
   // useEffect(() => {
@@ -142,24 +161,24 @@ export const Home: FC = () => {
               listContainerStyle={{}}
               listStyle={{}}
               hideResults={hideFromAutocomplete}
-              data={dataFromLocation.map((data) => data.name)}
-              value={fromLocation.name}
+              data={dataFromLocation}
+              value={inputFromData}
               placeholder="From"
               onChangeText={(text: string) => {
-                setInputData(text), setHideFromAutocomplete(false);
+                setInputFromData(text), setHideFromAutocomplete(false);
               }}
               flatListProps={{
                 keyExtractor: (_: any, idx: any) => idx,
                 renderItem: ({ item }) => (
                   <Text
                     onPress={() => {
-                      setFromLocation(locations.find((location: Location) => location.name === item) as Location);
+                      setFromLocation(locations.find((location: Location) => location.name === item.name) as Location);
                       setHideFromAutocomplete(true);
-                      setInputData("");
+                      setInputFromData(item.name);
                     }}
                     style={styles.autocompleteText}
                   >
-                    {item}
+                    {item.name}
                   </Text>
                 )
               }}
@@ -180,23 +199,23 @@ export const Home: FC = () => {
               listContainerStyle={{}}
               listStyle={{}}
               hideResults={hideToAutocomplete}
-              data={dataToLocation as any}
-              value={toLocation.name}
+              data={dataToLocation}
+              value={inputToData}
               onChangeText={(text: string) => {
-                setInputData(text), setHideToAutocomplete(false);
+                setInputToData(text), setHideToAutocomplete(false);
               }}
               flatListProps={{
                 keyExtractor: (_: any, idx: any) => idx,
                 renderItem: ({ item }) => (
                   <Text
                     onPress={() => {
-                      setToLocation(locations.find((location: Location) => location.name === item) as Location);
+                      setToLocation(locations.find((location: Location) => location.name === item.name) as Location);
                       setHideToAutocomplete(true);
-                      setInputData("");
+                      setInputToData(item.name);
                     }}
                     style={styles.autocompleteText}
                   >
-                    {item}
+                    {item.name}
                   </Text>
                 ),
               }}
@@ -205,9 +224,7 @@ export const Home: FC = () => {
         </View>
         <SortRoutes setRoutes={setRoutes} routes={routes} />
         <View style={styles.buttonContainer}>
-          <Button
-            icon="delete"
-            mode="elevated"
+          <Button icon="delete" mode="elevated"
             onPress={() => {
               setFromLocation({} as Location), setToLocation({} as Location)
               setOnSubmit(false);
@@ -227,8 +244,8 @@ export const Home: FC = () => {
       {onSubmit ?
         <View style={styles.flatList}>
           <FlatList
-            data={routes.slice(0, 10)}
-            renderItem={({ item }) => <ListComponent id={item.id} from={item.from} to={item.to} euro_price={item.euro_price} trip_duration={item.trip_duration} travel_data={item.travel_data} />}
+            data={filteredRoutes}
+            renderItem={({ item }) => <ListComponent fromLocation={fromLocation} toLocation={toLocation} route={item} />}
             keyExtractor={(item) => String(item.id)}
           />
         </View> : null}

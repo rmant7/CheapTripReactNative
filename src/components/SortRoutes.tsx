@@ -24,10 +24,11 @@ export const SortRoutes: FC<Props> = ({ routes, setRoutes }) => {
 
     useEffect(() => {
         const initialRoutes = [...Object.values(plane && flying_routes), ...Object.values(train && fixed_routes), ...Object.values(car && Routes)]
-       
+
         setRoutes(initialRoutes)
 
     }, [plane, train, car])
+
 
     return (
         <View>
