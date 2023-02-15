@@ -70,16 +70,16 @@ export const Home: FC = () => {
   };
 
   const contextData: any = useContext(Context);
-  
+
   const getRoutes = (from: Location, to: Location) => {
     const filteredRoutes = routes.filter((route: Route) => route.from === from.id && route.to === to.id)
     return filteredRoutes;
   }
 
-  useEffect(()=>{
-    setRoutes(contextData.routes);
+  useEffect(() => {
+    setRoutes([...contextData.routes, ...contextData.flyingRoutes, ...contextData.fixedRoutes]);
 
-  },[])
+  }, [])
 
   // get similar locations for autocomplete on input change
   useEffect(() => {

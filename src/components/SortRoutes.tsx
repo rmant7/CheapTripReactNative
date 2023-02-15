@@ -50,7 +50,7 @@ export const SortRoutes: FC<Props> = ({ routes, setRoutes }) => {
                         onPress={() => setCar(!car)} />
                 </View>
             </View>
-            <Text>{routes.length}</Text>
+            <Text>Routes found: {routes.length}</Text>
 
         </View>)
 }
