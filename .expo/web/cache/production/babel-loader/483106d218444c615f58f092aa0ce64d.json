@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default function MaskedView(_ref){var children=_ref.children;return children;}","map":{"version":3,"mappings":"AAUA,cAAe,SAASA,WAAU,MAAsB,IAAnBC,UAAiBC,KAAjBD,SACnC,MAAOA,SAAQ,CACjB","names":["MaskedView","children","_ref"],"sourceRoot":"../../src","sources":["MaskedView.tsx"],"sourcesContent":[null]},"metadata":{},"sourceType":"module"}

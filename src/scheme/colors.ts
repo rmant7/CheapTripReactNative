@@ -1,6 +1,6 @@
 export const generateColors = {
   colors: {
-    primary: "rgb(177, 44, 22)",
+    primary: "#ff5722",
     onPrimary: "rgb(255, 255, 255)",
     primaryContainer: "rgb(255, 218, 211)",
     onPrimaryContainer: "rgb(63, 4, 0)",

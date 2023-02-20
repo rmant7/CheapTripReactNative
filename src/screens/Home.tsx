@@ -1,95 +1,143 @@
-import React, { useState, useEffect, FC, useMemo, useCallback } from "react";
+import React, { useState, useEffect, FC, useMemo, useCallback, useContext } from "react";
 import { View, StyleSheet, Image, Platform } from "react-native";
 import { Text, useTheme, TextInput, Button } from "react-native-paper";
-import ListComponent from "../components/ListComponent/ListComponent";
-
 import Autocomplete from "react-native-autocomplete-input";
-
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
 
-export interface Item {
-  name: string;
+import { SortRoutes } from "../components/SortRoutes";
+import ListComponent from "../components/ListComponent/ListComponent";
+import { Context } from "../../App";
+
+// export interface Item {
+//   name: string;
+// }
+
+export interface Location {
+  id: number
+  name: string
+  country_name: string
+  latitude: number
+  longitude: number
 }
 
-interface directionsProps {
-  id: string;
-  from: string;
-  to: string;
-  price: string;
+export interface Route {
+  id: number
+  from: number
+  to: number
+  euro_price: number
+  trip_duration: number
+  travel_data: number[]
 }
 
 export const Home: FC = () => {
-  const [forCity, setForCity] = useState("");
-  const [toCity, setToCity] = useState("");
-  const [cities, setCities] = useState([]);
-  const [hideForCity, setHideForCity] = useState(false);
-  const [hideToCity, setHideToCity] = useState(false);
+
+  const [fromLocation, setFromLocation] = useState<Location>({} as Location);
+  const [toLocation, setToLocation] = useState<Location>({} as Location);
+
+  const [inputFromData, setInputFromData] = useState<string>("");
+  const [inputToData, setInputToData] = useState<string>("");
+
+  const [locations, setLocations] = useState<Location[]>((useContext(Context) as any).locations);
+  const [routes, setRoutes] = useState<Route[]>([]); // all routes from the file
+  const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
+
+  const [hideFromAutocomplete, setHideFromAutocomplete] = useState(false);
+  const [hideToAutocomplete, setHideToAutocomplete] = useState(false);
+
+  const [onSubmit, setOnSubmit] = useState(false)
+
+  const [dataFromLocation, setDataFromLocation] = useState<Location[]>([]);
+  const [dataToLocation, setDataToLocation] = useState<Location[]>([])
+
   const theme = useTheme();
 
- const [onSubmit,setOnSubmit] = useState(false)
+  const onSubmitAction = () => {
+    console.log("Pressed")
+    setOnSubmit(true)
+  }
 
- const onSubmitAction = () => {
-  console.log("Pressed")
-  setOnSubmit(true)
- }
-
- 
-
-  const filtredCities = (forCity: string) => {
-    if (forCity) {
-      const cityFor = cities.slice(1).filter((item: { name: string }) => {
-        const name = item.name;
-        if (name === undefined) return;
-        return name.toLowerCase().indexOf(forCity.toLowerCase()) === 0;
+  // get similar locations for autocomplete 
+  const getSimilarLocations = (locationName: string) => {
+    if (locationName) {
+      const similarLocatoins = locations.filter((location: Location) => {
+        if (location.name === undefined) return;
+        return location.name.toLowerCase().indexOf(locationName.toLowerCase()) === 0;
       });
-      return cityFor;
+      return similarLocatoins;
     }
     return [];
   };
 
-  const dataForCity = filtredCities(forCity);
-  const dataToCity = filtredCities(toCity);
+  const contextData: any = useContext(Context);
+
+  const getRoutes = (from: Location, to: Location) => {
+    const filteredRoutes = routes.filter((route: Route) => route.from === from.id && route.to === to.id)
+    return filteredRoutes;
+  }
 
   useEffect(() => {
-    (async () => {
-      try {
-        const getCities = await fetch(
-          "https://graphproject-482d9-default-rtdb.europe-west1.firebasedatabase.app/locations.json"
-        );
-        const responseData = await getCities.json();
+    setRoutes([...contextData.routes, ...contextData.flyingRoutes, ...contextData.fixedRoutes]);
 
-        await setCities(responseData);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
+  }, [])
 
-  const directions: directionsProps[] = useMemo(
+  // get similar locations for autocomplete on input change
+  useEffect(() => {
+    setDataFromLocation(getSimilarLocations(inputFromData));
+    setDataToLocation(getSimilarLocations(inputToData))
+  }, [inputFromData, inputToData]);
 
-  // new data will be fetched as an alternative to this array
-    
-    () => [
-      { id: "1", from: "Bucharest", to: "Iasi", price: "19.38" },
-      { id: "2", from: "Bucharest", to: "Iasi", price: "100" },
-      { id: "3", from: "Bucharest", to: "Iasi", price: "100" },
-      { id: "4", from: "Bucharest", to: "Iasi", price: "100" },
-      { id: "5", from: "Bucharest", to: "Iasi", price: "100" },
-      { id: "6", from: "Bucharest", to: "Iasi", price: "100" },
-      { id: "7", from: "Bucharest", to: "Iasi", price: "100" },
-      { id: "8", from: "Bucharest", to: "Iasi", price: "100" },
-      { id: "9", from: "Bucharest", to: "Iasi", price: "100" },
-    ],
-    []
-  );
+  // find routes for trip
+  useEffect(() => {
+    setFilteredRoutes(getRoutes(fromLocation, toLocation))
+  }, [fromLocation, toLocation]);
 
-  const renderItem = useCallback(({ item }) => {
-    return <ListComponent toCity={toCity} forCity={forCity} item={item} />;
-  }, []);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const getCities = await fetch(
+  //         "https://graphproject-482d9-default-rtdb.europe-west1.firebasedatabase.app/locations.json"
+  //       );
+  //       const responseData = await getCities.json();
+
+  //       await setCities(responseData);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   })();
+  // }, []);
+
+
+  // const locations = Object.values(location);
+
+  // console.log(locations.find((item: { id: number }) => item.id === "Bucharest"))
+
+  // const directions: directionsProps[] = useMemo(
+
+  //   // new data will be fetched as an alternative to this array
+
+  //   () => [
+  //     { id: "1", from: "Bucharest", to: "Iasi", price: "19.38" },
+  //     { id: "2", from: "Bucharest", to: "Iasi", price: "100" },
+  //     { id: "3", from: "Bucharest", to: "Iasi", price: "100" },
+  //     { id: "4", from: "Bucharest", to: "Iasi", price: "100" },
+  //     { id: "5", from: "Bucharest", to: "Iasi", price: "100" },
+  //     { id: "6", from: "Bucharest", to: "Iasi", price: "100" },
+  //     { id: "7", from: "Bucharest", to: "Iasi", price: "100" },
+  //     { id: "8", from: "Bucharest", to: "Iasi", price: "100" },
+  //     { id: "9", from: "Bucharest", to: "Iasi", price: "100" },
+  //   ],
+  //   []
+  // );
+
+  // const renderRoute = useCallback((route: Route) => {
+  //   return <ListComponent route={route} />;
+  // }, []);
+
   // const renderItems = ({ item }: { item: Item }) => <Text>{item.name}</Text>;
   return (
-    <View style={{ flex: 1}}>
+    <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text
@@ -112,25 +160,27 @@ export const Home: FC = () => {
               }}
               listContainerStyle={{}}
               listStyle={{}}
-              hideResults={hideForCity}
-              data={dataForCity}
-              value={forCity}
+              hideResults={hideFromAutocomplete}
+              data={dataFromLocation}
+              value={inputFromData}
+              placeholder="From"
               onChangeText={(text: string) => {
-                setForCity(text), setHideForCity(false);
+                setInputFromData(text), setHideFromAutocomplete(false);
               }}
               flatListProps={{
                 keyExtractor: (_: any, idx: any) => idx,
-                renderItem: ({ item }: { item: Item }) => (
+                renderItem: ({ item }) => (
                   <Text
                     onPress={() => {
-                      setForCity(item.name);
-                      setHideForCity(true);
+                      setFromLocation(locations.find((location: Location) => location.name === item.name) as Location);
+                      setHideFromAutocomplete(true);
+                      setInputFromData(item.name);
                     }}
                     style={styles.autocompleteText}
                   >
                     {item.name}
                   </Text>
-                ),
+                )
               }}
             />
 
@@ -145,21 +195,23 @@ export const Home: FC = () => {
                 width: "100%",
                 backgroundColor: "tomato",
               }}
+              placeholder="To"
               listContainerStyle={{}}
               listStyle={{}}
-              hideResults={hideToCity}
-              data={dataToCity}
-              value={toCity}
+              hideResults={hideToAutocomplete}
+              data={dataToLocation}
+              value={inputToData}
               onChangeText={(text: string) => {
-                setToCity(text), setHideToCity(false);
+                setInputToData(text), setHideToAutocomplete(false);
               }}
               flatListProps={{
                 keyExtractor: (_: any, idx: any) => idx,
-                renderItem: ({ item }: { item: Item }) => (
+                renderItem: ({ item }) => (
                   <Text
                     onPress={() => {
-                      setToCity(item.name);
-                      setHideToCity(true);
+                      setToLocation(locations.find((location: Location) => location.name === item.name) as Location);
+                      setHideToAutocomplete(true);
+                      setInputToData(item.name);
                     }}
                     style={styles.autocompleteText}
                   >
@@ -170,14 +222,12 @@ export const Home: FC = () => {
             />
           </View>
         </View>
+        <SortRoutes setRoutes={setRoutes} routes={routes} />
         <View style={styles.buttonContainer}>
-          <Button
-            icon="delete"
-            mode="elevated"
+          <Button icon="delete" mode="elevated"
             onPress={() => {
-              setForCity(""), setToCity("")
-              setOnSubmit(false)
-              ;
+              setFromLocation({} as Location), setToLocation({} as Location)
+              setOnSubmit(false);
             }}
           >
             Clear
@@ -191,14 +241,14 @@ export const Home: FC = () => {
           </Button>
         </View>
       </View>
-      {onSubmit ? 
-      <View style={styles.flatList}>
-        <FlatList
-          data={directions}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        />
-      </View> : null}
+      {onSubmit ?
+        <View style={styles.flatList}>
+          <FlatList
+            data={filteredRoutes}
+            renderItem={({ item }) => <ListComponent fromLocation={fromLocation} toLocation={toLocation} route={item} />}
+            keyExtractor={(item) => String(item.id)}
+          />
+        </View> : null}
     </View>
   );
 };
@@ -239,7 +289,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  
+
   autocompleteContainer: {
     width: "100%",
     alignItems: "center",
